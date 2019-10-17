@@ -10,4 +10,4 @@ npm install
 npm run serve
 ```
 
-jenkins push 测试成功
+jenkins push 测试成功10.17
