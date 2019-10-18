@@ -54,8 +54,8 @@ export default {
       //     '820000':4.7 //澳门
 
       // }
-      var adCode = 110000;
-      var depth = 0; //通过depth字段设定数据的层级深度，depth为0的时候只显示省面，depth为1的时候显示市级，当depth为2的可以显示县一级。
+      // var adCode = 110000;
+      // var depth = 0; //通过depth字段设定数据的层级深度，depth为0的时候只显示省面，depth为1的时候显示市级，当depth为2的可以显示县一级。
       var map = new AMap.Map("container", {
         resizeEnable: false,
         zoom: 5,
@@ -64,71 +64,60 @@ export default {
         viewMode: "3D"
       });
 
-      AMap.plugin(["AMap.ControlBar"], function() {
-        var bar = new AMap.ControlBar();
-        map.addControl(bar);
-      });
+      // AMap.plugin(["AMap.ControlBar"], function() {
+      //   var bar = new AMap.ControlBar();
+      //   map.addControl(bar);
+      // });
 
-      // 创建省份图层
-      var disProvince;
-      function initPro(code, dep) {
-        dep = typeof dep == "undefined" ? 2 : dep;
-        adCode = code;
-        depth = dep;
+      // // 创建省份图层
+      // var disProvince;
+      // function initPro(code, dep) {
+      //   dep = typeof dep == "undefined" ? 2 : dep;
+      //   adCode = code;
+      //   depth = dep;
 
-        disProvince && disProvince.setMap(null);
+      //   disProvince && disProvince.setMap(null);
 
-        disProvince = new AMap.DistrictLayer.Province({
-          zIndex: 12,
-          adcode: [code],
-          depth: 1,
-          styles: {
-            fill: function(properties) {
-              // properties为可用于做样式映射的字段，包含
-              // NAME_CHN:中文名称
-              // adcode_pro
-              // adcode_cit
-              // adcode
-              var adcode = properties.adcode;
-              return getColorByAdcode(adcode);
-            },
-            "province-stroke": "cornflowerblue",
-            "city-stroke": "white", // 中国地级市边界
-            "county-stroke": "rgba(255,255,255,0.5)" // 中国区县边界
-          }
-        });
+      //   disProvince = new AMap.DistrictLayer.Province({
+      //     zIndex: 12,
+      //     adcode: [code],
+      //     depth: dep,
+      //     styles: {
+      //       fill: function(properties) {
+      //         // properties为可用于做样式映射的字段，包含
+      //         // NAME_CHN:中文名称
+      //         // adcode_pro
+      //         // adcode_cit
+      //         // adcode
+      //         // var adcode = properties.adcode;
+      //         return "rgba(0,0,0,0.5)";
+      //       },
+      //       "province-stroke": "cornflowerblue",
+      //       "city-stroke": "white", // 中国地级市边界
+      //       "county-stroke": "rgba(255,255,255,0.5)" // 中国区县边界
+      //     }
+      //   });
 
-        disProvince.setMap(map);
-      }
+      //   disProvince.setMap(map);
+      // }
 
       // 颜色辅助方法
-      var colors = {};
-      var getColorByAdcode = function(adcode) {
-        if (!colors[adcode]) {
-          var gb = Math.random() * 155 + 50;
-          colors[adcode] = "rgb(" + gb + "," + gb + ",255)";
-        }
-
-        return colors[adcode];
-      };
-
-      // // 按钮事件
-      // function changeAdcode(code) {
-      //   if (code != 100000) {
-      //     initPro(code, depth);
+      // var colors = {};
+      // var getColorByAdcode = function(adcode) {
+      //   if (!colors[adcode]) {
+      //     var gb = Math.random() * 155 + 50;
+      //     colors[adcode] = "rgb(" + gb + "," + gb + ",255)";
       //   }
-      // }
 
-      // function changeDepth(dep) {
-      //   initPro(adCode, dep);
-      // }
+      //   return colors[adcode];
+      // };
 
-      initPro(adCode, depth);
+      // initPro(adCode, depth);
 
-      // new AMap.Map("container", {
-      //   center: [116.397428, 39.90923], //中心点坐标
-      //   viewMode: "3D" //使用3D视图
-      // });
+      // // new AMap.Map("container", {
+      // //   center: [116.397428, 39.90923], //中心点坐标
+      // //   viewMode: "3D" //使用3D视图
+      // // });
 
       /*
        * 添加Canvas图层
@@ -155,11 +144,10 @@ export default {
 
         //2D视图时可以省略
         CanvasLayer.reFresh();
-
         // AMap.Util.requestAnimFrame(draw);
       };
 
-      // 覆盖区域
+      // // 覆盖区域
       var bounds_v = new AMap.Bounds(
         [105.406315, 34.908775],
         [115.406315, 44.908775]
@@ -174,32 +162,29 @@ export default {
       CanvasLayer.setMap(map);
       draw();
 
-      // var marker = new AMap.Marker({
-      //   icon:
-      //     "//a.amap.com/jsapi_demos/static/demo-center/icons/poi-marker-default.png",
-      //   position: bounds_v.getCenter( ),
-      //   // offset: new AMap.Pixel(-23, -40),
-      //   title: "有地震，快跑，跑慢了你就翘辫子拉~~~~",
-      //   // anchor: "center",
-      //   content:'.'
+      var marker = new AMap.Marker({
+        position: bounds_v.getCenter(),
+        offset: new AMap.Pixel(-10, -10),
+        icon: "//vdata.amap.com/icons/b18/1/2.png", // 添加 Icon 图标 URL
+        title: "中心点",
+        // content:"中心"
+      });
+      marker.setMap(map);
+
+      // var circleMarker = new AMap.CircleMarker({
+      //   center: bounds_v.getCenter(),
+      //   map: map,
+      //   zIndex: 100,
+      //   radius: 5,
+      //   fillColor: "#ff000"
       // });
-      // marker.setMap(map);
+      // AMap.event.addListener(circleMarker, "mouseover", function() {
+      //   var infoWindow = new AMap.InfoWindow({
+      //     content: "<h1>快跑</h1>" //使用默认信息窗体框样式，显示信息内容
+      //   });
 
-      var circleMarker = new AMap.CircleMarker({
-        center: bounds_v.getCenter(),
-        map: map,
-        zIndex: 100,
-        radius: 5,
-        fillColor: "#ff000"
-      });
-      AMap.event.addListener(circleMarker, "mouseover", function() {
-        //  console.log('ddf')
-        var infoWindow = new AMap.InfoWindow({
-          content: "<h1>快跑</h1>" //使用默认信息窗体框样式，显示信息内容
-        });
-
-        infoWindow.open(map, circleMarker.getCenter( ));
-      });
+      //   infoWindow.open(map, circleMarker.getCenter( ));
+      // });
       // AMap.event.addDomListener(circleMarker, 'mouseover', );
     }
   }
